@@ -2,6 +2,7 @@
 	import EditorJS from '@editorjs/editorjs'
 	import Header from '@editorjs/header'
 	import Marker from '@editorjs/marker'
+	import Link from '@editorjs/link'
 
 	import { onMount } from 'svelte'
 
@@ -14,7 +15,8 @@
 			 * Id of Element that should contain the Editor
 			 */
 			holder: editorContainer,
-			inlineToolbar: ['bold', 'italic', 'link', 'marker'],
+			placeholder: 'Start writing your note...',
+			// inlineToolbar: ['bold', 'italic', 'link', 'marker'],
 
 			/**
 			 * Available Tools list.
@@ -23,9 +25,10 @@
 			tools: {
 				header: {
 					class: Header,
-					inlineToolbar: ['marker', 'link', 'bold'],
+					inlineToolbar: ['marker', 'link', 'bold', 'italic', 'link'],
 				} as any,
 				marker: Marker,
+				linkTool: Link,
 			},
 			/**
 			 * Previously saved data that should be rendered
@@ -33,9 +36,6 @@
 			data: {
 				blocks: [],
 			},
-
-			placeholder: 'Let`s write an awesome story!',
-
 			/**
 			 * onReady callback
 			 */
@@ -62,6 +62,15 @@
 <div bind:this={editorContainer} class="editor"></div>
 
 <style>
+	.editor {
+		width: 100%;
+		border-radius: 4px;
+		min-width: 300px;
+		min-height: 200px;
+		color: #000;
+		background-color: #fff;
+	}
+
 	:global(.codex-editor) {
 		font-family: inherit;
 	}
@@ -72,5 +81,10 @@
 
 	:global(.ce-block__content) {
 		max-width: none !important;
+	}
+
+	:global(.ce-paragraph),
+	:global(.ce-header) {
+		padding: 0.4em !important;
 	}
 </style>
