@@ -35,6 +35,7 @@
 		max-width: 300px;
 		padding: 80px 1rem 0.5rem;
 		background-color: #242424;
+		width: 100%;
 	}
 
 	.notes-list {
