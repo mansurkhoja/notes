@@ -59,11 +59,18 @@ button {
 	}
 }
 
-button:hover {
-	border-color: #646cff;
+@media (hover: hover) {
+	button:hover {
+		border-color: #646cff;
+	}
 }
 
-button:focus,
+@media (hover: none) {
+	button:active {
+		border-color: #646cff;
+	}
+}
+
 button:focus-visible {
 	outline: 2px auto #4149df;
 }
