@@ -3,25 +3,26 @@
 	import EditorJS from '@editorjs/editorjs'
 	import Header from '@editorjs/header'
 	import Marker from '@editorjs/marker'
-	import Link from '@editorjs/link'
+	import RawTool from '@editorjs/raw'
+	import EditorjsList from '@editorjs/list'
 	import type { OutputData } from '@editorjs/editorjs'
 
 	let editorContainer: HTMLDivElement
 	let editor: EditorJS | null = null
 	let isReady = $state(false)
 
-	interface Props {
-		data: OutputData
-		// onUpdate: (data: OutputData) => void
-	}
+	// interface Props {
+	// 	data: OutputData
+	// 	// onUpdate: (data: OutputData) => void
+	// }
 
 	let {
 		data = {
 			time: Date.now(),
 			blocks: [],
 			version: '2.31.0',
-		},
-	}: Props = $props()
+		} as OutputData,
+	} = $props()
 
 	onMount(() => {
 		editor = new EditorJS({
@@ -30,10 +31,17 @@
 			tools: {
 				header: {
 					class: Header,
-					inlineToolbar: true,
+					inlineToolbar: false,
 				} as any,
 				marker: Marker,
-				linkTool: Link,
+				raw: RawTool,
+				List: {
+					class: EditorjsList,
+					inlineToolbar: true,
+					config: {
+						defaultStyle: 'unordered',
+					},
+				},
 			},
 			data,
 			onReady: () => {
@@ -88,12 +96,22 @@
 		padding-bottom: 0 !important;
 	}
 
-	:global(.ce-block__content) {
-		max-width: none !important;
+	:global(.ce-block__content),
+	:global(.ce-toolbar__content) {
+		/* max-width: none !important; */
+		max-width: calc(100% - 120px) !important;
 	}
 
 	:global(.ce-paragraph),
 	:global(.ce-header) {
 		padding: 0.4em !important;
+	}
+
+	:global(.cdx-notifies) {
+		color: #999;
+	}
+
+	:global(.ce-inline-tool-input) {
+		color: #000;
 	}
 </style>
