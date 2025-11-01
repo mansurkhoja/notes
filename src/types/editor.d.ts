@@ -1,2 +1,2 @@
-declare module '@editorjs/link'
+declare module '@editorjs/raw'
 declare module '@editorjs/marker'
