@@ -9,6 +9,7 @@
 	import { startNotesListener } from './lib/notes'
 	import Header from './lib/Header.svelte'
 	import Sidebar from './lib/Sidebar.svelte'
+	import Content from './lib/Content.svelte'
 
 	// Svelte's '$' prefix to automatically subscribe to the store
 	// $currentUser will be null initially, then a User object, or null again if signed out.
@@ -46,8 +47,9 @@
 	<div class="loading">Loading...</div>
 {:else if $currentUser}
 	<Header />
-	<main>
+	<main class="flex a-start">
 		<Sidebar />
+		<Content />
 	</main>
 {:else}
 	<!-- Content for non-authenticated users -->
