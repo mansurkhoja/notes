@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import AlertDialog from './lib/components/AlertDialog.svelte'
-	import { currentUser, startAuthListener, signInWithGoogle } from './lib/auth' // Import from auth.ts
+	import {
+		currentUser,
+		startAuthListener,
+		signInWithGoogle,
+	} from './lib/auth' // Import from auth.ts
+	import { startNotesListener } from './lib/notes'
+	import Header from './lib/Header.svelte'
+	import Sidebar from './lib/Sidebar.svelte'
 
 	// Svelte's '$' prefix to automatically subscribe to the store
 	// $currentUser will be null initially, then a User object, or null again if signed out.
@@ -18,6 +25,7 @@
 	onMount(() => {
 		// Start the Firebase Auth listener when the component mounts
 		startAuthListener()
+		startNotesListener()
 
 		// No need for a return cleanup function here if startAuthListener handles its own lifecycle or is meant to persist
 		// If you had a stopAuthListener in auth.ts that you wanted to call when this component unmounts,
@@ -37,7 +45,10 @@
 {#if isLoading}
 	<div class="loading">Loading...</div>
 {:else if $currentUser}
-	<p>Welcome, {$currentUser.displayName || $currentUser.email}!</p>
+	<Header />
+	<main>
+		<Sidebar />
+	</main>
 {:else}
 	<!-- Content for non-authenticated users -->
 	<AlertDialog onConfirm={handleGoogleSignIn} open={true}>
@@ -75,5 +86,3 @@
 		{/snippet}
 	</AlertDialog>
 {/if}
-
-<WEditor />
