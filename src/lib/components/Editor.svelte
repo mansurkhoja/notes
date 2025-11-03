@@ -18,10 +18,9 @@
 
 	let {
 		data = {
-			time: Date.now(),
 			blocks: [],
-			version: '2.31.0',
 		} as OutputData,
+		onUpdate = (data: OutputData) => {},
 	} = $props()
 
 	onMount(() => {
@@ -43,19 +42,22 @@
 					},
 				},
 			},
-			data,
+			data: {
+				blocks: [],
+			},
 			onReady: () => {
 				isReady = true
 			},
-			onChange: async (api, event) => {
-				console.log('Content changed!', event)
+			onChange: async () => {
+				// console.log('Content changed!', event)
 
 				if (!editor) return
 
 				try {
 					const outputData: OutputData = await editor.save()
-					console.log('Article data: ', outputData)
-					console.log(JSON.stringify(outputData))
+					onUpdate?.(outputData)
+					// console.log('Article data: ', outputData)
+					// console.log(JSON.stringify(outputData))
 				} catch (error) {
 					console.log('Saving failed: ', error)
 				}
@@ -69,11 +71,11 @@
 		}
 	})
 
-	// $effect(() => {
-	// 	if (!editor || !isReady) return
-	// 	editor.render(data)
-	// 	console.log('2effect data')
-	// })
+	$effect(() => {
+		if (!editor || !isReady) return
+		editor.render(data)
+		console.log('effect data')
+	})
 </script>
 
 <div bind:this={editorContainer} class="editor"></div>
