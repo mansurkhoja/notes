@@ -13,7 +13,10 @@
 		{/each}
 	{:else}
 		<div class="notes-list">
-			<button class="note-link note-link--create flex column">
+			<button
+				class="note-link note-link--create flex column"
+				onclick={() => setCurrentNoteId(null)}
+			>
 				<div class="title">New note</div>
 			</button>
 			{#each $notes as note}
