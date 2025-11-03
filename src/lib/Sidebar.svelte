@@ -100,6 +100,10 @@
 	.skeleton {
 		height: 48px;
 		margin-bottom: 0.5rem;
+
+		&:nth-child(odd) :global(div) {
+			animation-delay: 0.1s;
+		}
 	}
 
 	@media screen and (max-width: 900px) {
