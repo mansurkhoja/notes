@@ -7,10 +7,6 @@
 		background: rgba(223, 223, 223, 0.15);
 		border-radius: 0.5rem;
 		animation: pulse 0.8s infinite;
-
-		&:nth-child(odd) {
-			animation-delay: 0.4s;
-		}
 	}
 
 	@keyframes pulse {
