@@ -26,7 +26,7 @@
 					class:active={$currentNoteId === note.id}
 					onclick={() => setCurrentNoteId(note.id)}
 				>
-					<div class="title">note.title</div>
+					<div class="title">{note.data}</div>
 					<div class="sub-title">No additional text</div>
 				</button>
 			{/each}
@@ -91,13 +91,20 @@
 	.title {
 		font-size: 1rem;
 		font-weight: 500;
+	}
+
+	.title,
+	.sub-title {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		max-width: 100%;
 		line-height: 1.3;
 	}
 
 	.sub-title {
 		font-size: 0.875rem;
 		color: #a0a0a0;
-		line-height: 1.3;
 	}
 
 	.skeleton {
