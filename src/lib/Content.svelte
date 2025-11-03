@@ -1,10 +1,26 @@
 <script lang="ts">
+	import type { OutputData } from '@editorjs/editorjs'
 	import Editor from './components/Editor.svelte'
 	import { isSidebarOpen } from './ui'
+	import { addNote, currentNoteId, setCurrentNoteId, updateNote } from './notes'
+
+	let note: OutputData = {
+		blocks: [],
+	}
+
+	async function handleUpdate(newData: OutputData) {
+		if (newData.blocks.length && $currentNoteId === null) {
+			const createdId = await addNote(JSON.stringify(newData))
+			setCurrentNoteId(createdId)
+		} else if ($currentNoteId) {
+			updateNote($currentNoteId, JSON.stringify(newData))
+		}
+	}
 </script>
 
 <div class="content" class:hidden={$isSidebarOpen}>
-	<Editor />
+	<Editor data={note} onUpdate={handleUpdate} />
+	<pre>{JSON.stringify(note, null, 2)}</pre>
 </div>
 
 <style>
