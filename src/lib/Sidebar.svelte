@@ -15,6 +15,7 @@
 		<div class="notes-list">
 			<button
 				class="note-link note-link--create flex column"
+				class:active={$currentNoteId === null}
 				onclick={() => setCurrentNoteId(null)}
 			>
 				<div class="title">New note</div>
@@ -64,7 +65,6 @@
 
 	.note-link--create {
 		color: #bbffa8;
-		background: rgba(245, 245, 245, 0.05);
 		border-color: rgba(245, 245, 245, 0.1);
 	}
 
