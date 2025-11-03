@@ -96,10 +96,12 @@
 		padding-bottom: 0 !important;
 	}
 
-	:global(.ce-block__content),
-	:global(.ce-toolbar__content) {
-		/* max-width: none !important; */
-		max-width: calc(100% - 120px) !important;
+	@media (min-width: 900px) {
+		:global(.ce-block__content),
+		:global(.ce-toolbar__content) {
+			/* max-width: none !important; */
+			max-width: calc(100% - 120px) !important;
+		}
 	}
 
 	:global(.ce-paragraph),
