@@ -6,7 +6,12 @@ import {
 	orderBy,
 	type DocumentData,
 	type QueryDocumentSnapshot,
-	type Unsubscribe
+	type Unsubscribe,
+	addDoc,
+	updateDoc,
+	Timestamp,
+	DocumentReference,
+	doc
 } from 'firebase/firestore'
 import { db } from './firebase'
 import { currentUser } from './auth'
@@ -90,4 +95,35 @@ currentUser.subscribe(user => {
 // Function to set the current note ID
 export function setCurrentNoteId(noteId: string | null): void {
 	currentNoteIdWritable.set(noteId)
+}
+
+// Add a new note (for completeness)
+export async function addNote(data: string): Promise<string> {
+	if (!currentUserId) {
+		throw new Error("No authenticated user to add a note.")
+	}
+	const docRef: DocumentReference = await addDoc(collection(db, 'users', currentUserId, 'notes'), {
+		data,
+		createdAt: Timestamp.now()
+	})
+
+	console.log(`Note with ID: ${docRef.id} created successfully.`)
+
+	return docRef.id
+}
+
+// Update an existing note
+export async function updateNote(noteId: string, newData: string): Promise<void> {
+	if (!currentUserId) {
+		throw new Error("No authenticated user to update a note.")
+	}
+
+	const noteRef = doc(db, 'users', currentUserId, 'notes', noteId)
+
+	await updateDoc(noteRef, {
+		data: newData,
+		updatedAt: Timestamp.now()
+	})
+
+	console.log(`Note with ID: ${noteId} updated successfully.`)
 }
