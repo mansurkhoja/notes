@@ -1,4 +1,4 @@
-import { writable, type Readable } from 'svelte/store'
+import { get, writable, type Readable } from 'svelte/store'
 import {
 	collection,
 	query,
@@ -11,10 +11,12 @@ import {
 	updateDoc,
 	Timestamp,
 	DocumentReference,
-	doc
+	doc,
+	deleteDoc
 } from 'firebase/firestore'
 import { db } from './firebase'
 import { currentUser } from './auth'
+import type { OutputData } from '@editorjs/editorjs'
 
 // Define the interface for Note documents
 export interface Note {
@@ -56,7 +58,16 @@ export function startNotesListener(): void {
 					})
 				})
 				notesWritable.set(fetchedNotes) // Update the Svelte store
-				console.log({ fetchedNotes })
+
+				fetchedNotes.forEach(async note => {
+					const id = note.id
+					if (get(currentNoteId) !== id) {
+						const data = JSON.parse(note.data) as OutputData
+						if (data.blocks.length === 0) {
+							await removeNote(id)
+						}
+					}
+				})
 			},
 			(error) => {
 				console.error("Error listening to notes:", error)
@@ -126,4 +137,17 @@ export async function updateNote(noteId: string, newData: string): Promise<void>
 	})
 
 	console.log(`Note with ID: ${noteId} updated successfully.`)
+}
+
+
+export async function removeNote(noteId: string): Promise<void> {
+	if (!currentUserId) {
+		throw new Error("No authenticated user to remove a note.")
+	}
+
+	const noteRef = doc(db, 'users', currentUserId, 'notes', noteId)
+
+	await deleteDoc(noteRef)
+
+	console.log(`Note with ID: ${noteId} removed successfully.`)
 }
