@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { signOutUser } from './auth'
 	import AlertDialog from './components/AlertDialog.svelte'
+	import Skeleton from './components/Skeleton.svelte'
 	import { notes } from './notes'
 	import { toggleSidebar } from './ui'
 </script>
@@ -28,8 +29,12 @@
 			<span class="logo-count">
 				{#if $notes !== undefined && $notes.length !== undefined}
 					{$notes.length} notes
-				{/if}</span
-			>
+				{:else}
+					<div style:height="12px">
+						<Skeleton />
+					</div>
+				{/if}
+			</span>
 		</div>
 		<AlertDialog
 			onConfirm={signOutUser}
