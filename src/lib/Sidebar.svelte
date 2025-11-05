@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Skeleton from './components/Skeleton.svelte'
 	import { currentNoteId, notes, setCurrentNoteId } from './notes'
-	import { isSidebarOpen } from './ui'
+	import { closeSidebar, isSidebarOpen } from './ui'
 
 	function getPreview(data: any): [string, string] {
 		if (!data?.blocks?.length) return ['New note', 'No content']
@@ -23,7 +23,9 @@
 			<button
 				class="note-link note-link--create flex column"
 				class:active={$currentNoteId === null}
-				onclick={() => setCurrentNoteId(null)}
+				onclick={() => {
+					setCurrentNoteId(null), closeSidebar()
+				}}
 			>
 				<div class="title">New note</div>
 			</button>
@@ -32,7 +34,9 @@
 				<button
 					class="note-link flex column"
 					class:active={$currentNoteId === note.id}
-					onclick={() => setCurrentNoteId(note.id)}
+					onclick={() => {
+						setCurrentNoteId(note.id), closeSidebar()
+					}}
 				>
 					<div class="title">
 						{title}
@@ -97,7 +101,6 @@
 	.note-link.active {
 		background: rgba(100, 108, 255, 0.1);
 		border-color: rgba(100, 108, 255, 0.3);
-		pointer-events: none;
 	}
 
 	.title {
