@@ -19,11 +19,12 @@
 	) as OutputData
 
 	async function handleUpdate(newData: OutputData) {
+		const stringData = JSON.stringify(newData)
 		if (newData.blocks.length && $currentNoteId === null) {
-			const createdId = await addNote(JSON.stringify(newData))
+			const createdId = await addNote(stringData)
 			setCurrentNoteId(createdId)
 		} else if ($currentNoteId) {
-			updateNote($currentNoteId, JSON.stringify(newData))
+			updateNote($currentNoteId, stringData)
 		}
 	}
 </script>
