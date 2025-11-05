@@ -2,6 +2,13 @@
 	import Skeleton from './components/Skeleton.svelte'
 	import { currentNoteId, notes, setCurrentNoteId } from './notes'
 	import { isSidebarOpen } from './ui'
+
+	function getPreview(data: any): [string, string] {
+		if (!data?.blocks?.length) return ['New note', 'No content']
+		const first = data.blocks[0]?.data?.text?.trim() || 'Untitled'
+		const second = data.blocks[1]?.data?.text?.trim() || 'No additional content'
+		return [first, second]
+	}
 </script>
 
 <div class="sidebar" class:hidden={!$isSidebarOpen}>
@@ -21,16 +28,17 @@
 				<div class="title">New note</div>
 			</button>
 			{#each $notes as note}
+				{@const [title, subtitle] = getPreview(note.data)}
 				<button
 					class="note-link flex column"
 					class:active={$currentNoteId === note.id}
 					onclick={() => setCurrentNoteId(note.id)}
 				>
 					<div class="title">
-						{note.data.blocks[0]?.data.text}
+						{title}
 					</div>
 					<div class="sub-title">
-						{note.data.blocks[1]?.data.text || 'No additional content'}
+						{subtitle}
 					</div>
 				</button>
 			{/each}
