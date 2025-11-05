@@ -5,8 +5,16 @@
 
 	function getPreview(data: any): [string, string] {
 		if (!data?.blocks?.length) return ['New note', 'No content']
-		const first = data.blocks[0]?.data?.text?.trim() || 'Untitled'
-		const second = data.blocks[1]?.data?.text?.trim() || 'No additional content'
+
+		const clean = (text: string | undefined): string =>
+			(text || '')
+				.replace(/&nbsp;/g, ' ') // ← Remove &nbsp;
+				.replace(/\s+/g, ' ') // ← Collapse multiple spaces
+				.trim()
+
+		const first = clean(data.blocks[0]?.data?.text) || 'Untitled'
+		const second = clean(data.blocks[1]?.data?.text) || 'No additional content'
+
 		return [first, second]
 	}
 </script>
