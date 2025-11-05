@@ -26,8 +26,12 @@
 					class:active={$currentNoteId === note.id}
 					onclick={() => setCurrentNoteId(note.id)}
 				>
-					<div class="title">{note.data}</div>
-					<div class="sub-title">No additional text</div>
+					<div class="title">
+						{note.data.blocks[0]?.data.text}
+					</div>
+					<div class="sub-title">
+						{note.data.blocks[1]?.data.text || 'No additional content'}
+					</div>
 				</button>
 			{/each}
 		</div>
