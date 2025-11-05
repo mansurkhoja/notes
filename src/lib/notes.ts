@@ -21,7 +21,7 @@ import type { OutputData } from '@editorjs/editorjs'
 // Define the interface for Note documents
 export interface Note {
 	id: string
-	data: string
+	data: OutputData
 	createdAt: Date
 }
 
@@ -57,17 +57,20 @@ export function startNotesListener(): void {
 						createdAt: doc.data().createdAt?.toDate() // Convert Firestore Timestamp to JS Date
 					})
 				})
-				notesWritable.set(fetchedNotes) // Update the Svelte store
 
 				fetchedNotes.forEach(async note => {
 					const id = note.id
+					if (typeof note.data === 'string') {
+						note.data = JSON.parse(note.data) as OutputData
+					}
 					if (get(currentNoteId) !== id) {
-						const data = JSON.parse(note.data) as OutputData
-						if (data.blocks.length === 0) {
+						if (note.data.blocks.length === 0) {
 							await removeNote(id)
 						}
 					}
 				})
+
+				notesWritable.set(fetchedNotes) // Update the Svelte store
 			},
 			(error) => {
 				console.error("Error listening to notes:", error)
@@ -139,7 +142,7 @@ export async function updateNote(noteId: string, newData: string): Promise<void>
 	console.log(`Note with ID: ${noteId} updated successfully.`)
 }
 
-
+// Remove a note
 export async function removeNote(noteId: string): Promise<void> {
 	if (!currentUserId) {
 		throw new Error("No authenticated user to remove a note.")
@@ -150,4 +153,9 @@ export async function removeNote(noteId: string): Promise<void> {
 	await deleteDoc(noteRef)
 
 	console.log(`Note with ID: ${noteId} removed successfully.`)
+}
+
+// Get a note by ID
+export function getNoteById(id: string): Note | undefined {
+	return get(notes)?.find(note => note.id === id)
 }
