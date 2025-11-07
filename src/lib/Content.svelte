@@ -2,25 +2,27 @@
 	import type { OutputData } from '@editorjs/editorjs'
 	import Editor from './components/Editor.svelte'
 	import { isSidebarOpen } from './ui'
-	import {
-		addNote,
-		currentNoteId,
-		getNoteById,
-		setCurrentNoteId,
-		updateNote,
-	} from './notes'
+	import { addNote, currentNoteId, setCurrentNoteId, updateNote } from './notes'
 
-	let note = $derived(
-		$currentNoteId && getNoteById($currentNoteId)
-			? getNoteById($currentNoteId)?.data
-			: {
-					blocks: [],
-				},
-	) as OutputData
+	let editorInstance: any = $state(null)
+	const emptyData: OutputData = {
+		blocks: [],
+	}
+
+	export function loadNoteData(data: OutputData = emptyData) {
+		if (editorInstance) {
+			editorInstance.render(data).catch(() => {})
+		}
+	}
+
+	let isAddingNote = false
 
 	async function handleUpdate(newData: OutputData) {
 		const stringData = JSON.stringify(newData)
+		console.log(editorInstance)
 		if (newData.blocks.length && $currentNoteId === null) {
+			if (isAddingNote) return
+			isAddingNote = true
 			const createdId = await addNote(stringData)
 			setCurrentNoteId(createdId)
 		} else if ($currentNoteId) {
@@ -30,8 +32,8 @@
 </script>
 
 <div class="content" class:hidden={$isSidebarOpen}>
-	<Editor data={note} onUpdate={handleUpdate} />
-	<!-- <pre>{JSON.stringify(note, null, 2)}</pre> -->
+	<Editor bind:instance={editorInstance} onUpdate={handleUpdate} />
+	<!-- <pre>{(JSON.stringify(note, null, 2))}</pre> -->
 </div>
 
 <style>
