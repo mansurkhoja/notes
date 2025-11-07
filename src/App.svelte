@@ -42,10 +42,8 @@
 		}
 	}
 </script>
-
-{#if isLoading}
-	<div class="loading">Loading...</div>
-{:else if $currentUser}
+ 
+{#if isLoading || $currentUser}
 	<Header />
 	<main class="flex a-start">
 		<Sidebar />
