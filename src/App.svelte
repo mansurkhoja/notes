@@ -21,13 +21,14 @@
 	}
 
 	let contentComponent: Content
+	setContext('loadNoteData', (data?: OutputData) => {
+		contentComponent?.loadNoteData(data)
+	})
+
 	onMount(() => {
 		// Start the Firebase Auth listener when the component mounts
 		startAuthListener()
 		startNotesListener()
-		setContext('loadNoteData', (data?: OutputData) => {
-			contentComponent?.loadNoteData(data)
-		})
 		// No need for a return cleanup function here if startAuthListener handles its own lifecycle or is meant to persist
 		// If you had a stopAuthListener in auth.ts that you wanted to call when this component unmounts,
 		// you would return it here:
@@ -42,7 +43,7 @@
 		}
 	}
 </script>
- 
+
 {#if isLoading || $currentUser}
 	<Header />
 	<main class="flex a-start">
