@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onMount, setContext } from 'svelte'
 	import AlertDialog from './lib/components/AlertDialog.svelte'
-	import {
-		currentUser,
-		startAuthListener,
-		signInWithGoogle,
-	} from './lib/auth' // Import from auth.ts
+	import { currentUser, startAuthListener, signInWithGoogle } from './lib/auth' // Import from auth.ts
 	import { startNotesListener } from './lib/notes'
 	import Header from './lib/Header.svelte'
 	import Sidebar from './lib/Sidebar.svelte'
 	import Content from './lib/Content.svelte'
+	import type { OutputData } from '@editorjs/editorjs'
 
 	// Svelte's '$' prefix to automatically subscribe to the store
 	// $currentUser will be null initially, then a User object, or null again if signed out.
@@ -23,11 +20,14 @@
 		}
 	}
 
+	let contentComponent: Content
 	onMount(() => {
 		// Start the Firebase Auth listener when the component mounts
 		startAuthListener()
 		startNotesListener()
-
+		setContext('loadNoteData', (data?: OutputData) => {
+			contentComponent?.loadNoteData(data)
+		})
 		// No need for a return cleanup function here if startAuthListener handles its own lifecycle or is meant to persist
 		// If you had a stopAuthListener in auth.ts that you wanted to call when this component unmounts,
 		// you would return it here:
@@ -49,7 +49,7 @@
 	<Header />
 	<main class="flex a-start">
 		<Sidebar />
-		<Content />
+		<Content bind:this={contentComponent} />
 	</main>
 {:else}
 	<!-- Content for non-authenticated users -->
