@@ -10,17 +10,14 @@
 	let editorContainer: HTMLDivElement
 	let editor: EditorJS | null = null
 	let isReady = $state(false)
-
 	// interface Props {
 	// 	data: OutputData
 	// 	// onUpdate: (data: OutputData) => void
 	// }
 
 	let {
-		data = {
-			blocks: [],
-		} as OutputData,
 		onUpdate = (data: OutputData) => {},
+		instance = $bindable(null) as EditorJS | null,
 	} = $props()
 
 	onMount(() => {
@@ -47,17 +44,14 @@
 			},
 			onReady: () => {
 				isReady = true
+				instance = editor
 			},
 			onChange: async () => {
-				// console.log('Content changed!', event)
-
 				if (!editor) return
 
 				try {
 					const outputData: OutputData = await editor.save()
 					onUpdate?.(outputData)
-					// console.log('Article data: ', outputData)
-					// console.log(JSON.stringify(outputData))
 				} catch (error) {
 					console.log('Saving failed: ', error)
 				}
@@ -71,11 +65,11 @@
 		}
 	})
 
-	$effect(() => {
-		if (!editor || !isReady) return
-		editor.render(data)
-		console.log('effect data')
-	})
+	// $effect(() => {
+	// 	if (!editor || !isReady) return
+	// 	editor.render(data)
+	// 	console.log('effect data')
+	// })
 </script>
 
 <div bind:this={editorContainer} class="editor"></div>
