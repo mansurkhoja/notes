@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { getContext } from 'svelte'
 	import Skeleton from './components/Skeleton.svelte'
 	import { currentNoteId, notes, setCurrentNoteId } from './notes'
 	import { closeSidebar, isSidebarOpen } from './ui'
+	import type { OutputData } from '@editorjs/editorjs'
 
 	function getPreview(data: any): [string, string] {
 		if (!data?.blocks?.length) return ['New note', 'No content']
@@ -17,6 +19,8 @@
 
 		return [first, second]
 	}
+	const loadNoteData =
+		getContext<(data?: OutputData) => void>('loadNoteData')
 </script>
 
 <div class="sidebar" class:hidden={!$isSidebarOpen}>
@@ -32,7 +36,11 @@
 				class="note-link note-link--create flex column"
 				class:active={$currentNoteId === null}
 				onclick={() => {
-					setCurrentNoteId(null), closeSidebar()
+					closeSidebar()
+					if ($currentNoteId !== null) {
+						setCurrentNoteId(null)
+						loadNoteData()
+					}
 				}}
 			>
 				<div class="title">New note</div>
@@ -43,7 +51,11 @@
 					class="note-link flex column"
 					class:active={$currentNoteId === note.id}
 					onclick={() => {
-						setCurrentNoteId(note.id), closeSidebar()
+						closeSidebar()
+						if ($currentNoteId !== note.id) {
+							setCurrentNoteId(note.id)
+							loadNoteData(note.data)
+						}
 					}}
 				>
 					<div class="title">
