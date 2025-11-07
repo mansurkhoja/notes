@@ -77,7 +77,6 @@
 <style>
 	.editor {
 		width: 100%;
-		border-radius: 4px;
 		min-width: 300px;
 		min-height: 200px;
 		color: #000;
