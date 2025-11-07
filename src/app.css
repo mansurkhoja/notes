@@ -5,7 +5,7 @@
 	font-weight: 400;
 
 	color-scheme: dark;
-	color: rgba(255, 255, 255, 0.87);
+	color: #fff;
 	background-color: #242424;
 
 	font-synthesis: none;
@@ -46,6 +46,7 @@ button {
 	font-weight: 500;
 	font-family: inherit;
 	background-color: #1a1a1a;
+	color: #fff;
 	cursor: pointer;
 	user-select: none;
 	transition: border-color 0.25s;
