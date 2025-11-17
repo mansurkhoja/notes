@@ -35,6 +35,7 @@
 			isAddingNote = true
 			const createdId = await addNote(stringData)
 			setCurrentNoteId(createdId)
+			isAddingNote = false
 		} else if ($currentNoteId) {
 			updateNote($currentNoteId, stringData)
 		}
